@@ -1,5 +1,5 @@
-# BridgingTheGapFigures
-Code to reproduce results in "A reliable set of equations for anisotropy in ice sheet models"
+# ComparitiveStudyofFabricFigures
+Code to reproduce results in "A comparitive study of fabric evolution models and anisotropic rheologies"
 
 # Requirements
 
