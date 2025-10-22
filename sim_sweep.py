@@ -150,6 +150,7 @@ for j in range(len(paramvals)):
         ax[j].plot(paramvals[j],ev_zl_mean[1:],color=colors[2])
 
     ax[j].set_xlabel(label[j])
+    
 
     ax[j].set_xscale(scale[j])
     
@@ -169,6 +170,7 @@ for j in range(len(paramvals)):
 
 
 ax[0].set_ylabel('Eigenvalue')
+ax[0].set_xlim(0,5)
 # ax[0].set_xlabel('$\\alpha$')
 # ax[1].set_xlabel('$\\tilde{\\lambda}$')
 
@@ -228,17 +230,20 @@ fig.savefig('./images/paramsensitivityunchanged.pdf',bbox_inches='tight')
 
 x0 = np.array(mc.MacroscopicClass(alphaD=0.0,alphaS=1.0,lamb=0.32,beta=0,Eca=1e2,power=3))
 
-paramtosweep = 9
+paramtosweep = 6
 
-modelstosweep = [2]
+modelstosweep = [4]
 # modelstosweep = [0,1]
 
-nsweep = 40
-npoints = 8000
+nsweep = 8
+npoints = 500
 
 
 # paramvals = np.logspace(0,5,nsweep)
-paramvals = np.logspace(-6,-1,nsweep)
+# paramvals = np.logspace(-6,-1,nsweep)
+# paramvals = np.linspace(1,10,nsweep)
+# paramvals = np.logspace(1,5,nsweep)
+paramvals = np.linspace(1,5,nsweep)
 params = []
 
 βvals = np.linspace(0.01,0.1,10)
@@ -378,7 +383,7 @@ for j in range(len(modelstosweep)):
     a.set_xlabel(mc.ParamNames(paramtosweep,latex=True))
     
     # axis title
-    if len(modelstosweep) > 1:
+    if len(modelstosweep) > 0:
         a.set_title(mc.ModelNames(modelstosweep[j]))
 
 
@@ -438,3 +443,5 @@ fig.suptitle('Parameter sensitivity for ' + paramname +': Average eigenvalues at
 paramfilename = mc.ParamNames(paramtosweep,latex=False)
 
 fig.savefig('./images/paramsensitivity'+paramfilename+'.pdf',bbox_inches='tight')
+
+# %%

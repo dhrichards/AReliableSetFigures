@@ -42,7 +42,7 @@ def legfmt3(x,model):
             + ', $\\tilde{\\lambda} = ' + lamb + '$'
 
 params = []
-age = None
+age = 2000
 if age:
     params.append(mc.GrainClass(alpha=0.0,lamb=0.00,Eca=1e2,power=3))
     params.append(mc.MacroscopicClass(alphaD=2.0,alphaS=0,lamb=0.2,Eca=1,power=3))
@@ -50,7 +50,7 @@ if age:
     params.append(mc.GrainClass(alpha=1.0,lamb=0.25,Eca=1e2,power=3))
     params.append(mc.MacroscopicClass(alphaD=0.0,alphaS=1.0,lamb=0.3,Eca=1e2,power=3))
     params.append(mc.MacroscopicClass(alphaD=0.0,alphaS=1.5,lamb=0.45,Eca=1e2,power=3))
-    params.append(mc.MacroscopicClass(alphaD=0.0,alphaS=1.0,lamb=0.25,Eca=1e2,power=3))
+    # params.append(mc.MacroscopicClass(alphaD=0.0,alphaS=1.0,lamb=0.25,Eca=1e2,power=3))
     
 else:
     params.append(mc.GrainClass(alpha=0.0,lamb=0.03,Eca=1e2,power=3))
@@ -59,13 +59,14 @@ else:
     params.append(mc.GrainClass(alpha=1.0,lamb=0.32,Eca=1e2,power=3))
     params.append(mc.MacroscopicClass(alphaD=0.0,alphaS=1.15,lamb=0.45,Eca=1e2,power=3))
     params.append(mc.MacroscopicClass(alphaD=0.0,alphaS=1.47,lamb=0.49,Eca=1e2,power=3))
-    params.append(mc.MacroscopicClass(alphaD=0.0,alphaS=1.1,lamb=0.36,Eca=1e2,power=3))
-
+    # params.append(mc.MacroscopicClass(alphaD=0.0,alphaS=1.1,lamb=0.36,Eca=1e2,power=3))
+    # params.append(mc.MacroscopicClass(alphaD=0.0,alphaS=1.47,lamb=0.49,Eca=1e2,power=3))
+   
 
 ages = [age]*len(params)
 
 # 0 = sachs, 1= golf, 2 = caffe, 3 = glen, 4 = RathmannFull, 5 = Petit, 6= RathmannMartin 7= Rathmann2 8 = Golf2
-model = [0,3,2,0,1,4,5]
+model = [0,3,2,0,1,4,5,6]
 # model = [3,2,0,1,5]
 # model = [2,2]
 solver = ['mc']*len(params)
@@ -74,8 +75,8 @@ solver[4] = 'mcnp'
 
 
 
-# legend = ['Estar/Glen','CAFFE','Sachs','GOLF','Rathmann']
-legend = ['Taylor', 'Estar/Glen','CAFFE','Sachs','GOLF','Rathmann \n Unapprox.','Rathmann\n Petit']
+# legend = ['Glen','CAFFE','Sachs','GOLF','Rathmann']
+legend = ['Taylor', 'Glen','CAFFE','Sachs','GOLF','NLO']# \n Unapprox.','NLO \n Petit', 'NLO \n Martin']
 # legend = ['Original','Modified']
 
 
@@ -88,7 +89,7 @@ else:
 sim = simulation(npoints, params, legend, model,colors=colors,solver=solver)
 
 fig = sim.divide(1)
-fig.savefig('./images/'+ fileprefix +'divides.png', bbox_inches='tight',dpi=400)
+# fig.savefig('./images/'+ fileprefix +'divides.png', bbox_inches='tight',dpi=400)
 
 
 if age:
@@ -97,9 +98,9 @@ else:
     fig,fabrics = sim.stream()
 
 
-fig.savefig('./images/' + fileprefix +'stream.pdf', bbox_inches='tight')
+# fig.savefig('./images/' + fileprefix +'stream.pdf', bbox_inches='tight')
 fig = sim.plot_figures(fabrics)
-fig.savefig('./images/' + fileprefix +'fabrics.png', bbox_inches='tight',dpi=400)
+# fig.savefig('./images/' + fileprefix +'fabrics.png', bbox_inches='tight',dpi=400)
 
 
 #%%
@@ -342,7 +343,7 @@ import cartopy.crs as ccrs
 L=6
 mmax=6
 nrows = 2
-ncols = 4
+ncols = int(np.ceil(len(params)/nrows))
 cmap = 'viridis'
 
 vmax = 0.4
@@ -368,7 +369,7 @@ for i in range(nrows):
         axs.append(ax)
 
 
-axs[-1].remove()
+# axs[-1].remove()
 
 # shuffle = [4,5,6,3,0,1,2]
 for j in range(len(sim.params)):
@@ -412,10 +413,10 @@ for i in range(npf):
 
 
 # add colorbar
-cax = fig.add_axes([0.8, 0.2, 0.01, 0.2])
-fig.colorbar(pcol, cax=cax, orientation='vertical',label='ODF')
+cax = fig.add_axes([0.17, 0.25, 0.2, 0.02])
+fig.colorbar(pcol, cax=cax, orientation='horizontal',label='ODF')
 # add custom labels from 0 to f_max
-cax.set_yticks([0,vmax])
+# cax.set_yticks([0,vmax])
 # cax.set_yticklabels(['0',r'$f_{max}$'])
 
 # add little compass bottom left
@@ -651,7 +652,7 @@ for i in range(len(sim.params)):
 
 
 error_sum = np.sum(error,axis=1)
-#normalise relative to Estar/Glen
+#normalise relative to Glen
 error_sum = error_sum/error_sum[1]
 fig,ax = plt.subplots(1,1,figsize=(7.5,4))
 colors = sns.color_palette("deep",len(params))
@@ -690,7 +691,7 @@ fig,ax = plt.subplots(1,1,figsize=(7.5,4))
 colors = sns.color_palette("deep",len(params))
 
 error_stream_sum = np.sum(error_stream,axis=1)
-#normalise relative to Estar/Glen
+#normalise relative to Glen
 error_stream_sum = error_stream_sum/error_stream_sum[1]
 
 ax.bar(legend,error_stream_sum*100,color=colors)
